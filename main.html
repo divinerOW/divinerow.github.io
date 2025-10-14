@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OW选手职业生涯回顾</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            margin-top: 20px;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+            font-size: 2.5rem;
+        }
+        
+        .input-section {
+            margin-bottom: 30px;
+        }
+        
+        textarea {
+            width: 100%;
+            height: 120px;
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid #4a90e2;
+            background: rgba(255, 255, 255, 0.9);
+            font-size: 16px;
+            resize: vertical;
+            margin-bottom: 15px;
+        }
+        
+        .generate-btn {
+            background: #4a90e2;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 30px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: block;
+            margin: 0 auto;
+        }
+        
+        .generate-btn:hover {
+            background: #357ae8;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .wheel-container {
+            position: relative;
+            width: 600px;
+            height: 600px;
+            margin: 0 auto 30px;
+        }
+        
+        .wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 0 8px #fff, 0 0 15px rgba(0, 0, 0, 0.5);
+            transition: transform 1s cubic-bezier(0.17, 0.67, 0.14, 0.93);
+            transform: rotate(0deg);
+        }
+        
+        .section {
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            left: 50%;
+            top: 0;
+            transform-origin: 0% 100%;
+            overflow: hidden;
+            /* 通过clip-path控制扇形角度 */
+            clip-path: polygon(0% 0%, 100% 0%, 35% 0%, 0% 100%);
+        }
+        
+        .section-inner {
+            position: absolute;
+            width: 100%;
+            height: 50%;
+            transform-origin: 0% 100%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding-left: 5px;
+        }
+        
+        .section span {
+            transform: rotate(90deg);
+            text-align: center;
+            font-weight: bold;
+            color: #333;
+            text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
+            white-space: nowrap;
+            font-size: 16px;
+        }
+        
+        .pointer {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 40px;
+            background-color: #ff4757;
+            clip-path: polygon(50% 100%, 0 0, 100% 0);
+            z-index: 10;
+        }
+        
+        .spin-button {
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 18px;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s;
+            display: block;
+            margin: 0 auto 20px;
+        }
+        
+        .spin-button:hover {
+            background: #ff3742;
+            transform: translateY(-2px);
+            box-shadow: 0 7px 20px rgba(0, 0, 0, 0.4);
+        }
+        
+        .spin-button:disabled {
+            background: #b2bec3;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .variables {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            min-height: 100px;
+        }
+        
+        .variable {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px 25px;
+            border-radius: 10px;
+            text-align: center;
+            min-width: 150px;
+            margin: 10px;
+        }
+        
+        .variable h3 {
+            margin-bottom: 10px;
+            color: #ffce56;
+        }
+        
+        .variable-value {
+            font-size: 20px;
+            font-weight: bold;
+            min-height: 30px;
+        }
+        
+        .reset-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            margin: 10px auto;
+            display: block;
+            transition: all 0.3s;
+        }
+        
+        .reset-btn:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+        }
+        
+        .story-section {
+            margin-top: 30px;
+        }
+        
+        .story-btn {
+            background: #2ecc71;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 18px;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s;
+            display: block;
+            margin: 0 auto 20px;
+        }
+        
+        .story-btn:hover {
+            background: #27ae60;
+            transform: translateY(-2px);
+            box-shadow: 0 7px 20px rgba(0, 0, 0, 0.4);
+        }
+        
+        .story-btn:disabled {
+            background: #b2bec3;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .story {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            min-height: 150px;
+            line-height: 1.8;
+            font-size: 18px;
+        }
+        
+        .story-line {
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.5s, transform 0.5s;
+        }
+        
+        .story-line.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .pulse {
+            animation: pulse 0.5s ease-in-out 3;
+        }
+        
+        .instructions {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <h1>故事转盘生成器</h1>
+    
+    <div class="container">
+        <div class="input-section">
+            <h2>自定义转盘选项</h2>
+            <textarea id="optionsInput" placeholder="请输入转盘选项，每行一个（例如：孙悟空、蜘蛛侠、灭霸、哈利波特...）">Leave
+Shy
+Guxue
+Ameng
+Jimmy
+Jinmu
+Kyo
+Proper
+Lip
+Diya
+Lengsa
+Someone
+Heesang
+Violet
+Fleta
+Quartz
+Youbi
+Hadi
+Kevster
+MCD
+</textarea>
+            <button class="generate-btn" id="generateBtn">生成转盘</button>
+        </div>
+        
+        <div class="wheel-container">
+            <div class="pointer"></div>
+            <div class="wheel" id="wheel"></div>
+        </div>
+        
+        <button class="spin-button" id="spinButton">转动转盘</button>
+        
+        <div class="variables" id="variablesContainer">
+            <div class="variable">
+                <h3>等待选择</h3>
+                <div class="variable-value">请转动转盘</div>
+            </div>
+        </div>
+        
+        <button class="reset-btn" id="resetBtn">重新选择</button>
+        
+        <div class="story-section">
+            <button class="story-btn" id="storyButton" disabled>生成故事</button>
+            <div class="story" id="story"></div>
+        </div>
+        
+        <div class="instructions">
+            <p><strong>使用说明：</strong></p>
+            <p>1. 在文本框中输入转盘选项（每行一个）</p>
+            <p>2. 点击"生成转盘"按钮更新转盘</p>
+            <p>3. 点击"转动转盘"按钮选择角色（至少选择2个）</p>
+            <p>4. 点击"生成故事"按钮查看生成的故事</p>
+            <p>5. 点击"重新选择"按钮可以重置所有选择</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const wheel = document.getElementById('wheel');
+            const spinButton = document.getElementById('spinButton');
+            const generateBtn = document.getElementById('generateBtn');
+            const storyButton = document.getElementById('storyButton');
+            const resetBtn = document.getElementById('resetBtn');
+            const optionsInput = document.getElementById('optionsInput');
+            const variablesContainer = document.getElementById('variablesContainer');
+            const story = document.getElementById('story');
+            
+            // 默认选项 - 使用数组表示
+            let defaultOptions = [
+                "Leave", "Shy", "Guxue", "Ameng", "Jimmy",
+                "Jinmu", "Kyo", "Proper", "Lip", "Diya",
+                "Someone", "Heesang", "Violet", "Fleta", "Lengsa",
+                "Quartz", "Youbi", "Hadi", "Kevster", "MCD"
+            ];
+            let currentOptions = [...defaultOptions];
+            let colors = ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF", 
+                         "#FF9F40", "#C9CBCF", "#4BC0C0", "#FF6384", "#36A2EB",
+                         "#FFCE56", "#4BC0C0", "#9966FF", "#FF9F40", "#C9CBCF"];
+            
+            // 状态变量 - 使用数组存储所有角色
+            let sl = []; // 存储选中的角色
+            let roleNames = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]; // 可自定义角色类型
+            
+            // 创建转盘扇形
+            function createWheelSections() {
+                wheel.innerHTML = '';
+                const totalSections = currentOptions.length;
+                const anglePerSection = 360 / totalSections;
+                
+                currentOptions.forEach((option, index) => {
+                    const section = document.createElement('div');
+                    section.className = 'section';
+                    section.style.backgroundColor = colors[index % colors.length];
+                    const startAngle = index * anglePerSection;
+                    const endAngle = (index + 1) * anglePerSection;
+                    // 使用clip-path创建精确的扇形
+                    section.style.clipPath = `conic-gradient(from ${startAngle}deg at 50% 50%, 
+                        transparent 0deg, 
+                        transparent ${anglePerSection}deg, 
+                        ${colors[index % colors.length]} 0deg)`;      
+                    section.style.transform = `rotate(${startAngle}deg)`;
+                    
+                    // 创建扇形内部的文字容器
+                    const sectionInner = document.createElement('div');
+                    sectionInner.className = 'section-inner';
+                    
+                    const span = document.createElement('span');
+                    span.textContent = option;
+                    sectionInner.appendChild(span);
+                    
+                    section.appendChild(sectionInner);
+                    wheel.appendChild(section);
+                });
+            }
+            
+            // 旋转转盘
+            function spinWheel() {
+                spinButton.disabled = true;
+                
+                // 确保至少转2圈，随机3-5圈
+                const minSpins = 2;
+                const extraSpins = Math.floor(Math.random() * 3);
+                const totalSpins = minSpins + extraSpins;
+                
+                const sectionAngle = 360 / currentOptions.length;
+                const winningIndex = Math.floor(Math.random() * currentOptions.length);
+                const selectedCharacter = currentOptions[winningIndex];
+                
+                const finalRotation = totalSpins * 360 + (360 - (winningIndex * sectionAngle)) - (sectionAngle / 2);
+                
+                wheel.style.transform = `rotate(${finalRotation}deg)`;
+                
+                setTimeout(() => {
+                    spinButton.disabled = false;
+                    
+                    // 将选中的角色添加到数组中
+                    sl.push(selectedCharacter);
+                    
+                    // 更新显示
+                    updateRoleDisplay();
+                    
+                    // 如果已经选择了足够多的角色，启用故事生成按钮
+                    if (sl.length >= 12) { // 至少需要主角和反派
+                        storyButton.disabled = false;
+                    }
+                }, 1000);
+            }
+            
+            // 更新角色显示
+            function updateRoleDisplay() {
+                variablesContainer.innerHTML = '';
+                
+                sl.forEach((character, index) => {
+                    const variable = document.createElement('div');
+                    variable.className = 'variable';
+                    
+                    const h3 = document.createElement('h3');
+                    // 使用预设的角色名称，如果没有就使用默认名称
+                    h3.textContent = roleNames[index] || `角色${index + 1}`;
+                    
+                    const value = document.createElement('div');
+                    value.className = 'variable-value';
+                    value.textContent = character;
+                    value.id = `roleValue${index}`; // 添加ID以便后续操作
+                    
+                    variable.appendChild(h3);
+                    variable.appendChild(value);
+                    variablesContainer.appendChild(variable);
+                    
+                    // 添加选中动画
+                    value.classList.add('pulse');
+                    setTimeout(() => value.classList.remove('pulse'), 1500);
+                });
+                
+                // 如果还没有选择任何角色，显示提示
+                if (sl.length === 0) {
+                    const placeholder = document.createElement('div');
+                    placeholder.className = 'variable';
+                    placeholder.innerHTML = '<h3>等待选择</h3><div class="variable-value">请转动转盘</div>';
+                    variablesContainer.appendChild(placeholder);
+                }
+            }
+            
+            // 生成故事
+            function generateStory() {
+                story.innerHTML = '';
+                storyButton.disabled = true;
+                
+                const lines = [
+                    `2016年的夏天，${sl[0]} 第一次接触到了《守望先锋》这款游戏`,
+                    `${sl[0]} 在这个游戏极具天赋,引起了知名选手 ${sl[1]} 的注意`,
+                    `${sl[0]} 跟 ${sl[2]} 组成双自由人组合,赢下了OWL阶段赛的冠军`,
+                    `${sl[0]} 的偶像是 ${sl[3]}`,
+                    `${sl[0]} 因为订了闹钟不按时起床,与室友 ${sl[5]} 产生矛盾`,
+                    `${sl[0]} 被同队的 ${sl[6]} 压力,吃不到资源被 ${sl[6]} pua不会保活`,
+                    `${sl[0]} 在比赛中与 ${sl[7]} 猎空对位大获全胜`,
+                    `${sl[0]} 和 ${sl[8]} 功能重叠,在队伍里看了一年的饮水机`,
+                    `${sl[0]} 在直播打天梯的时候发现自己被 ${sl[9]} 避免了`,
+                    `${sl[0]} 备战期间和 ${sl[10]} 通宵玩三角洲,导致队伍输掉了世界赛`,
+                    `${sl[0]} 在世界赛期间给 ${sl[11]} 点了一份外卖,点到了有毒的土豆,导致 ${sl[11]} 的队伍世界赛失利`
+                ];
+                
+                lines.forEach((line, index) => {
+                    setTimeout(() => {
+                        const storyLine = document.createElement('div');
+                        storyLine.className = 'story-line';
+                        storyLine.textContent = line;
+                        story.appendChild(storyLine);
+                        
+                        setTimeout(() => {
+                            storyLine.classList.add('visible');
+                        }, 100);
+                    }, index * 1000);
+                });
+            }
+            
+            // 重置功能
+            function resetSelection() {
+                sl = [];
+                updateRoleDisplay();
+                story.innerHTML = '';
+                storyButton.disabled = true;
+                spinButton.disabled = false;
+            }
+            
+            // 更新转盘选项
+            function updateWheelOptions() {
+                const inputText = optionsInput.value.trim();
+                if (inputText) {
+                    currentOptions = inputText.split('\n').filter(option => option.trim() !== '');
+                    if (currentOptions.length < 2) {
+                        alert('请至少输入两个选项！');
+                        return;
+                    }
+                    createWheelSections();
+                    resetSelection();
+                }
+            }
+            
+            // 初始化转盘
+            createWheelSections();
+            
+            // 绑定事件
+            spinButton.addEventListener('click', spinWheel);
+            generateBtn.addEventListener('click', updateWheelOptions);
+            storyButton.addEventListener('click', generateStory);
+            resetBtn.addEventListener('click', resetSelection);
+        });
+    </script>
+</body>
+</html>
