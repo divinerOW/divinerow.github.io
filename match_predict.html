@@ -1,0 +1,1292 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OWCS Finals赛果预测</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: #fff;
+            min-height: 100vh;
+            padding: 15px;
+        }
+        
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 30px 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('images/owcs_white.png');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.2;
+            z-index: -1;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 8px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .brackets-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .bracket-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 1.3rem;
+            padding: 8px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 6px;
+        }
+        
+        .bracket-container {
+            display: flex;
+            overflow-x: auto;
+            padding: 15px 0;
+            gap: 30px;
+        }
+        
+        .round {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            min-width: 230px;
+        }
+        
+        .round-title {
+            text-align: center;
+            margin-bottom: 8px;
+            padding: 6px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .match {
+            position: relative;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            padding: 5px;
+            width: 230px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+        
+        .match::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: -15px;
+            width: 15px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.5);
+        }
+        
+        .match:last-child::after {
+            display: none;
+        }
+        
+        .team {
+            display: flex;
+            align-items: center;
+            margin-bottom: 6px;
+            padding: 6px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .team:last-child {
+            margin-bottom: 0;
+        }
+        
+        .team-icon {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: #ffffff73;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 5px;
+            font-weight: bold;
+            font-size: 0.8rem;
+            color: #333;
+            overflow: hidden;
+        }
+
+        .team-icon img {
+            width: 70%;
+            height: 70%;
+            object-fit: cover;
+        }
+        
+        .team-name {
+            flex: 1;
+            font-size: 1.2rem;
+        }
+        
+        .score-select {
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 3px;
+            padding: 4px 8px;
+            color: #333;
+            font-weight: bold;
+            width: 45px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        
+        .winner {
+            background: rgba(76, 175, 80, 0.3);
+            border-left: 3px solid #4CAF50;
+        }
+        
+        .loser {
+            opacity: 0.7;
+        }
+        
+        .champion-section {
+            text-align: center;
+            padding: 15px;
+            background: rgba(255, 215, 0, 0.2);
+            border-radius: 8px;
+            border: 2px solid gold;
+            margin-left: 20px;
+            min-width: 250px;
+        }
+        
+        .champion-title {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: gold;
+        }
+        
+        .champion-team {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+        
+        .champion-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: gold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-weight: bold;
+            font-size: 1rem;
+            color: #333;
+            overflow: hidden;
+        }
+
+        .champion-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .instructions {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .instructions h2 {
+            margin-bottom: 12px;
+            color: #fdbb2d;
+            font-size: 1.2rem;
+        }
+        
+        .instructions ul {
+            padding-left: 18px;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+        
+        .bracket-legend {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.9rem;
+        }
+        
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+        }
+        
+        .winner-legend {
+            background: rgba(76, 175, 80, 0.3);
+            border-left: 3px solid #4CAF50;
+        }
+        
+        .loser-legend {
+            background: rgba(255, 255, 255, 0.1);
+            opacity: 0.7;
+        }
+        
+        .final-container {
+            display: flex;
+            align-items: flex-start;
+            gap: 30px;
+        }
+        
+        @media (max-width: 1200px) {
+            .bracket-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .round {
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 15px;
+            }
+            
+            .match::after {
+                display: none;
+            }
+            
+            .final-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .champion-section {
+                margin-left: 0;
+                margin-top: 15px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .round {
+                min-width: 100%;
+            }
+            
+            .match {
+                width: 100%;
+                max-width: 280px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>OWCS Finals赛果预测</h1>
+            <p class="subtitle">选择比分，预测比赛结果，见证冠军诞生</p>
+        </header>
+        
+        <div class="bracket-legend">
+            <div class="legend-item">
+                <div class="legend-color winner-legend"></div>
+                <span>胜者</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color loser-legend"></div>
+                <span>败者</span>
+            </div>
+        </div>
+        
+        <div class="brackets-wrapper">
+            <!-- 胜者组 -->
+            <div class="bracket-section">
+                <h2 class="section-title">胜者组</h2>
+                <div class="bracket-container">
+                    <!-- 胜者组第一轮 -->
+                    <div class="round">
+                        <h3 class="round-title">胜者组第一轮 (FT2)</h3>
+                        <div class="match" id="match1">
+                            <div class="team" id="team1">
+                                <div class="team-icon">T1</div>
+                                <div class="team-name">Team Alpha</div>
+                                <select class="score-select" onchange="updateBracket()">
+                                    <option value="-">-</option>
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                </select>
+                            </div>
+                            <div class="team" id="team2">
+                                <div class="team-icon">T2</div>
+                                <div class="team-name">Team Bravo</div>
+                                <select class="score-select" onchange="updateBracket()">
+                                    <option value="-">-</option>
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="match" id="match2">
+                            <div class="team" id="team3">
+                                <div class="team-icon">T3</div>
+                                <div class="team-name">Team Charlie</div>
+                                <select class="score-select" onchange="updateBracket()">
+                                    <option value="-">-</option>
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                </select>
+                            </div>
+                            <div class="team" id="team4">
+                                <div class="team-icon">T4</div>
+                                <div class="team-name">Team Delta</div>
+                                <select class="score-select" onchange="updateBracket()">
+                                    <option value="-">-</option>
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="match" id="match3">
+                            <div class="team" id="team5">
+                                <div class="team-icon">T5</div>
+                                <div class="team-name">Team Echo</div>
+                                <select class="score-select" onchange="updateBracket()">
+                                    <option value="-">-</option>
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                </select>
+                            </div>
+                            <div class="team" id="team6">
+                                <div class="team-icon">T6</div>
+                                <div class="team-name">Team Foxtrot</div>
+                                <select class="score-select" onchange="updateBracket()">
+                                    <option value="-">-</option>
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="match" id="match4">
+                            <div class="team" id="team7">
+                                <div class="team-icon">T7</div>
+                                <div class="team-name">Team Golf</div>
+                                <select class="score-select" onchange="updateBracket()">
+                                    <option value="-">-</option>
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                </select>
+                            </div>
+                            <div class="team" id="team8">
+                                <div class="team-icon">T8</div>
+                                <div class="team-name">Team Hotel</div>
+                                <select class="score-select" onchange="updateBracket()">
+                                    <option value="-">-</option>
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 胜者组第二轮 -->
+                    <div class="round">
+                        <h3 class="round-title">胜者组第二轮 (FT3)</h3>
+                        <div class="match" id="match9">
+                            <div class="team" id="team17">
+                                <div class="team-icon">T9</div>
+                                <div class="team-name">Team India</div>
+                                <select class="score-select" onchange="updateBracket()">
+                                    <option value="-">-</option>
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                </select>
+                            </div>
+                            <div class="team" id="team18">
+                                <div class="team-icon">-</div>
+                                <div class="team-name">等待比赛结果</div>
+                                <select class="score-select" onchange="updateBracket()">
+                                    <option value="-">-</option>
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="match" id="match10">
+                            <div class="team" id="team19">
+                                <div class="team-icon">T10</div>
+                                <div class="team-name">Team Juliet</div>
+                                <select class="score-select" onchange="updateBracket()">
+                                    <option value="-">-</option>
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                </select>
+                            </div>
+                            <div class="team" id="team20">
+                                <div class="team-icon">-</div>
+                                <div class="team-name">等待比赛结果</div>
+                                <select class="score-select" onchange="updateBracket()">
+                                    <option value="-">-</option>
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="match" id="match11">
+                            <div class="team" id="team21">
+                                <div class="team-icon">T11</div>
+                                <div class="team-name">Team Kilo</div>
+                                <select class="score-select" onchange="updateBracket()">
+                                    <option value="-">-</option>
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                </select>
+                            </div>
+                            <div class="team" id="team22">
+                                <div class="team-icon">-</div>
+                                <div class="team-name">等待比赛结果</div>
+                                <select class="score-select" onchange="updateBracket()">
+                                    <option value="-">-</option>
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="match" id="match12">
+                            <div class="team" id="team23">
+                                <div class="team-icon">T12</div>
+                                <div class="team-name">Team Lima</div>
+                                <select class="score-select" onchange="updateBracket()">
+                                    <option value="-">-</option>
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                </select>
+                            </div>
+                            <div class="team" id="team24">
+                                <div class="team-icon">-</div>
+                                <div class="team-name">等待比赛结果</div>
+                                <select class="score-select" onchange="updateBracket()">
+                                    <option value="-">-</option>
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 胜者组第三轮 -->
+                    <div class="round">
+                        <h3 class="round-title">胜者组第三轮 (FT3)</h3>
+                        <div class="match" id="match13">
+                            <div class="team" id="team25">
+                                <div class="team-icon">-</div>
+                                <div class="team-name">等待比赛结果</div>
+                                <select class="score-select" onchange="updateBracket()">
+                                    <option value="-">-</option>
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                </select>
+                            </div>
+                            <div class="team" id="team26">
+                                <div class="team-icon">-</div>
+                                <div class="team-name">等待比赛结果</div>
+                                <select class="score-select" onchange="updateBracket()">
+                                    <option value="-">-</option>
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="match" id="match14">
+                            <div class="team" id="team27">
+                                <div class="team-icon">-</div>
+                                <div class="team-name">等待比赛结果</div>
+                                <select class="score-select" onchange="updateBracket()">
+                                    <option value="-">-</option>
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                </select>
+                            </div>
+                            <div class="team" id="team28">
+                                <div class="team-icon">-</div>
+                                <div class="team-name">等待比赛结果</div>
+                                <select class="score-select" onchange="updateBracket()">
+                                    <option value="-">-</option>
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 胜者组决赛和总决赛 -->
+                    <div class="final-container">
+                        <!-- 胜者组决赛 -->
+                        <div class="round">
+                            <h3 class="round-title">胜者组决赛 (FT3)</h3>
+                            <div class="match" id="match15">
+                                <div class="team" id="team29">
+                                    <div class="team-icon">-</div>
+                                    <div class="team-name">等待比赛结果</div>
+                                    <select class="score-select" onchange="updateBracket()">
+                                        <option value="-">-</option>
+                                        <option value="0">0</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                    </select>
+                                </div>
+                                <div class="team" id="team30">
+                                    <div class="team-icon">-</div>
+                                    <div class="team-name">等待比赛结果</div>
+                                    <select class="score-select" onchange="updateBracket()">
+                                        <option value="-">-</option>
+                                        <option value="0">0</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 总决赛 -->
+                        <div class="champion-section">
+                            <h2 class="champion-title">总决赛 (FT4)</h2>
+                            <div class="match" id="match20">
+                                <div class="team" id="team39">
+                                    <div class="team-icon">-</div>
+                                    <div class="team-name">等待比赛结果</div>
+                                    <select class="score-select" onchange="updateBracket()">
+                                        <option value="-">-</option>
+                                        <option value="0">0</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                    </select>
+                                </div>
+                                <div class="team" id="team40">
+                                    <div class="team-icon">-</div>
+                                    <div class="team-name">等待比赛结果</div>
+                                    <select class="score-select" onchange="updateBracket()">
+                                        <option value="-">-</option>
+                                        <option value="0">0</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div id="championResult">
+                                <h3 class="champion-title">冠军</h3>
+                                <div class="champion-team">
+                                    <div class="champion-icon">?</div>
+                                    <div class="champion-name">等待总决赛结果</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 败者组 -->
+            <div class="bracket-section">
+                <h2 class="section-title">败者组</h2>
+                <div class="bracket-container">
+                    <!-- 败者组第一轮 -->
+                    <div class="round">
+                        <h3 class="round-title">败者组第一轮 (FT2)</h3>
+                        <div class="match" id="match5">
+                            <div class="team" id="team9">
+                                <div class="team-icon">-</div>
+                                <div class="team-name">等待比赛结果</div>
+                                <select class="score-select" onchange="updateBracket()">
+                                    <option value="-">-</option>
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                </select>
+                            </div>
+                            <div class="team" id="team10">
+                                <div class="team-icon">-</div>
+                                <div class="team-name">等待比赛结果</div>
+                                <select class="score-select" onchange="updateBracket()">
+                                    <option value="-">-</option>
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="match" id="match6">
+                            <div class="team" id="team11">
+                                <div class="team-icon">-</div>
+                                <div class="team-name">等待比赛结果</div>
+                                <select class="score-select" onchange="updateBracket()">
+                                    <option value="-">-</option>
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                </select>
+                            </div>
+                            <div class="team" id="team12">
+                                <div class="team-icon">-</div>
+                                <div class="team-name">等待比赛结果</div>
+                                <select class="score-select" onchange="updateBracket()">
+                                    <option value="-">-</option>
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="match" id="match7">
+                            <div class="team" id="team13">
+                                <div class="team-icon">-</div>
+                                <div class="team-name">等待比赛结果</div>
+                                <select class="score-select" onchange="updateBracket()">
+                                    <option value="-">-</option>
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                </select>
+                            </div>
+                            <div class="team" id="team14">
+                                <div class="team-icon">-</div>
+                                <div class="team-name">等待比赛结果</div>
+                                <select class="score-select" onchange="updateBracket()">
+                                    <option value="-">-</option>
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="match" id="match8">
+                            <div class="team" id="team15">
+                                <div class="team-icon">-</div>
+                                <div class="team-name">等待比赛结果</div>
+                                <select class="score-select" onchange="updateBracket()">
+                                    <option value="-">-</option>
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                </select>
+                            </div>
+                            <div class="team" id="team16">
+                                <div class="team-icon">-</div>
+                                <div class="team-name">等待比赛结果</div>
+                                <select class="score-select" onchange="updateBracket()">
+                                    <option value="-">-</option>
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 败者组第二轮 -->
+                    <div class="round">
+                        <h3 class="round-title">败者组第二轮 (FT3)</h3>
+                        <div class="match" id="match16">
+                            <div class="team" id="team31">
+                                <div class="team-icon">-</div>
+                                <div class="team-name">等待比赛结果</div>
+                                <select class="score-select" onchange="updateBracket()">
+                                    <option value="-">-</option>
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                </select>
+                            </div>
+                            <div class="team" id="team32">
+                                <div class="team-icon">-</div>
+                                <div class="team-name">等待比赛结果</div>
+                                <select class="score-select" onchange="updateBracket()">
+                                    <option value="-">-</option>
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="match" id="match17">
+                            <div class="team" id="team33">
+                                <div class="team-icon">-</div>
+                                <div class="team-name">等待比赛结果</div>
+                                <select class="score-select" onchange="updateBracket()">
+                                    <option value="-">-</option>
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                </select>
+                            </div>
+                            <div class="team" id="team34">
+                                <div class="team-icon">-</div>
+                                <div class="team-name">等待比赛结果</div>
+                                <select class="score-select" onchange="updateBracket()">
+                                    <option value="-">-</option>
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 败者组第三轮 -->
+                    <div class="round">
+                        <h3 class="round-title">败者组第三轮 (FT3)</h3>
+                        <div class="match" id="match18">
+                            <div class="team" id="team35">
+                                <div class="team-icon">-</div>
+                                <div class="team-name">等待比赛结果</div>
+                                <select class="score-select" onchange="updateBracket()">
+                                    <option value="-">-</option>
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                </select>
+                            </div>
+                            <div class="team" id="team36">
+                                <div class="team-icon">-</div>
+                                <div class="team-name">等待比赛结果</div>
+                                <select class="score-select" onchange="updateBracket()">
+                                    <option value="-">-</option>
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="match" id="match21">
+                            <div class="team" id="team41">
+                                <div class="team-icon">-</div>
+                                <div class="team-name">等待比赛结果</div>
+                                <select class="score-select" onchange="updateBracket()">
+                                    <option value="-">-</option>
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                </select>
+                            </div>
+                            <div class="team" id="team42">
+                                <div class="team-icon">-</div>
+                                <div class="team-name">等待比赛结果</div>
+                                <select class="score-select" onchange="updateBracket()">
+                                    <option value="-">-</option>
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="round">
+                        <h3 class="round-title">败者组半决赛 (FT3)</h3>
+                        <div class="match" id="match22">
+                            <div class="team" id="team43">
+                                <div class="team-icon">-</div>
+                                <div class="team-name">等待比赛结果</div>
+                                <select class="score-select" onchange="updateBracket()">
+                                    <option value="-">-</option>
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                </select>
+                            </div>
+                            <div class="team" id="team44">
+                                <div class="team-icon">-</div>
+                                <div class="team-name">等待比赛结果</div>
+                                <select class="score-select" onchange="updateBracket()">
+                                    <option value="-">-</option>
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 败者组决赛 -->
+                    <div class="round">
+                        <h3 class="round-title">败者组决赛 (FT3)</h3>
+                        <div class="match" id="match19">
+                            <div class="team" id="team37">
+                                <div class="team-icon">-</div>
+                                <div class="team-name">等待比赛结果</div>
+                                <select class="score-select" onchange="updateBracket()">
+                                    <option value="-">-</option>
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                </select>
+                            </div>
+                            <div class="team" id="team38">
+                                <div class="team-icon">-</div>
+                                <div class="team-name">等待比赛结果</div>
+                                <select class="score-select" onchange="updateBracket()">
+                                    <option value="-">-</option>
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="instructions">
+            <h2>说明</h2>
+            <ul>
+                <li>从下拉菜单中选择每场比赛的比分</li>
+                <li>系统会自动计算胜者并填充到下一轮比赛</li>
+                <li>首轮比赛和败者组首轮为FT2</li>
+                <li>总决赛为FT4</li>
+                <li>其他比赛为FT3</li>
+                <li>队伍图标来自液体百科 https://liquipedia.net/overwatch/Overwatch_Champions_Series/2025/World_Finals</li>
+                <li>对局安排出自Finals规则书，如果有错误请务必联系 @抽象派神棍 </li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // 初始化队伍数据
+        const teams = [
+            { id: 1, name: "Spacestation", icon: "T1", image: "images/ssg.png" },
+            { id: 2, name: "Team Peps", icon: "T2", image: "images/peps.png" },
+            { id: 3, name: "Al Qadsiah", icon: "T3", image: "images/qad.png" },
+            { id: 4, name: "Geekay Esports", icon: "T4", image: "images/gk.png" },
+            { id: 5, name: "Team CC", icon: "T5", image: "images/cc.png" },
+            { id: 6, name: "T1", icon: "T6", image: "images/t1.png" },
+            { id: 7, name: "Team Falcons", icon: "T7", image: "images/flc.png" },
+            { id: 8, name: "Varrel", icon: "T8", image: "images/vl.png" },
+            { id: 9, name: "Crazy Raccoon", icon: "T9", image: "images/cr.png" },
+            { id: 10, name: "Weibo Gaming", icon: "T10", image: "images/wbg.png" },
+            { id: 11, name: "Twisted Minds", icon: "T11", image: "images/tm.png" },
+            { id: 12, name: "Team Liquid", icon: "T12", image: "images/tl.png" }
+        ];
+        
+        // 比赛映射关系
+        const matchConnections = {
+            // 胜者组第一轮 -> 胜者组第二轮
+            "match1": { winner: "team18" },
+            "match2": { winner: "team20" },
+            "match3": { winner: "team22" },
+            "match4": { winner: "team24" },
+            
+            // 胜者组第二轮 -> 胜者组第三轮
+            "match9": { winner: "team25" },
+            "match10": { winner: "team26" },
+            "match11": { winner: "team27" },
+            "match12": { winner: "team28" },
+            
+            // 胜者组第三轮 -> 胜者组决赛
+            "match13": { winner: "team29" },
+            "match14": { winner: "team30" },
+            
+            // 胜者组决赛 -> 总决赛
+            "match15": { winner: "team39" },
+            
+            // 败者组第一轮 -> 败者组第二轮
+            "match5": { winner: "team31" },
+            "match6": { winner: "team32" },
+            "match7": { winner: "team33" },
+            "match8": { winner: "team34" },
+            
+            // 败者组第二轮 -> 败者组第三轮
+            "match16": { winner: "team36" },
+            "match17": { winner: "team42" },
+            
+            // 败者组第三轮 -> 败者组半决赛
+            "match18": { winner: "team43" },
+            
+            // 败者组决赛 -> 总决赛
+            "match19": { winner: "team40" },
+            
+            // 总决赛 -> 冠军
+            "match20": { winner: "champion" },
+
+            "match21": { winner: "team44" },
+            // 败者组半决赛 -> 败者组决赛
+            "match22": { winner: "team38" },
+        };
+        
+        // 败者组连接关系
+        const loserConnections = {
+            // 胜者组第一轮败者 -> 败者组第一轮
+            "match1": { loser: "team9" },
+            "match2": { loser: "team11" },
+            "match3": { loser: "team13" },
+            "match4": { loser: "team15" },
+            
+            // 胜者组第二轮败者 -> 败者组第一轮
+            "match9": { loser: "team16" },
+            "match10": { loser: "team14" },
+            "match11": { loser: "team12" },
+            "match12": { loser: "team10" },
+            
+            // 胜者组第三轮败者 -> 败者组第三轮
+            "match13": { loser: "team35" },
+            "match14": { loser: "team41" },
+            
+            // 胜者组决赛败者 -> 败者组决赛
+            "match15": { loser: "team37" }
+        };
+        
+        // 初始化队伍到首轮比赛
+        function initializeTeams() {
+            // 设置首轮8支队伍
+            for (let i = 0; i < 8; i++) {
+                const teamElement = document.getElementById(`team${i+1}`);
+                teamElement.querySelector('.team-name').textContent = teams[i].name;
+                
+                const teamIcon = teamElement.querySelector('.team-icon');
+                teamIcon.innerHTML = ''; // 清空原有内容
+                const img = document.createElement('img');
+                img.src = teams[i].image;
+                img.alt = teams[i].name;
+                img.onerror = function() {
+                    // 如果图片加载失败，显示文字图标
+                    this.style.display = 'none';
+                    teamIcon.textContent = teams[i].icon;
+                    teamIcon.style.display = 'flex';
+                };
+                teamIcon.appendChild(img);
+            }
+            
+            // 设置剩余4支队伍到胜者组第二轮
+            const setTeamWithImage = (teamId, teamIndex) => {
+                const teamElement = document.getElementById(teamId);
+                teamElement.querySelector('.team-name').textContent = teams[teamIndex].name;
+                
+                const teamIcon = teamElement.querySelector('.team-icon');
+                teamIcon.innerHTML = '';
+                const img = document.createElement('img');
+                img.src = teams[teamIndex].image;
+                img.alt = teams[teamIndex].name;
+                img.onerror = function() {
+                    this.style.display = 'none';
+                    teamIcon.textContent = teams[teamIndex].icon;
+                    teamIcon.style.display = 'flex';
+                };
+                teamIcon.appendChild(img);
+            };
+            
+            setTeamWithImage('team17', 8);
+            setTeamWithImage('team19', 9);
+            setTeamWithImage('team21', 10);
+            setTeamWithImage('team23', 11);
+        }
+        
+        // 更新比赛结果
+        function updateBracket() {
+            // 重置所有队伍样式
+            document.querySelectorAll('.team').forEach(team => {
+                team.classList.remove('winner', 'loser');
+            });
+            
+            // 计算每场比赛结果
+            for (let i = 1; i <= 22; i++) {
+                const matchId = `match${i}`;
+                const matchElement = document.getElementById(matchId);
+                if (!matchElement) continue;
+                
+                const teamsInMatch = matchElement.querySelectorAll('.team');
+                if (teamsInMatch.length < 2) continue;
+                
+                const score1 = parseInt(teamsInMatch[0].querySelector('.score-select').value);
+                const score2 = parseInt(teamsInMatch[1].querySelector('.score-select').value);
+                
+                // 如果两队都有有效分数，计算胜者
+                if (!isNaN(score1) && !isNaN(score2)) {
+                    if (score1 > score2) {
+                        teamsInMatch[0].classList.add('winner');
+                        teamsInMatch[1].classList.add('loser');
+                        
+                        // 更新胜者到下一轮
+                        if (matchConnections[matchId]) {
+                            const nextTeamId = matchConnections[matchId].winner;
+                            if (nextTeamId === 'champion') {
+                                updateChampion(teamsInMatch[0]);
+                            } else {
+                                updateTeam(nextTeamId, teamsInMatch[0]);
+                            }
+                        }
+                        
+                        // 更新败者到败者组
+                        if (loserConnections[matchId]) {
+                            const nextLoserTeamId = loserConnections[matchId].loser;
+                            updateTeam(nextLoserTeamId, teamsInMatch[1]);
+                        }
+                    } else if (score2 > score1) {
+                        teamsInMatch[1].classList.add('winner');
+                        teamsInMatch[0].classList.add('loser');
+                        
+                        // 更新胜者到下一轮
+                        if (matchConnections[matchId]) {
+                            const nextTeamId = matchConnections[matchId].winner;
+                            if (nextTeamId === 'champion') {
+                                updateChampion(teamsInMatch[1]);
+                            } else {
+                                updateTeam(nextTeamId, teamsInMatch[1]);
+                            }
+                        }
+                        
+                        // 更新败者到败者组
+                        if (loserConnections[matchId]) {
+                            const nextLoserTeamId = loserConnections[matchId].loser;
+                            updateTeam(nextLoserTeamId, teamsInMatch[0]);
+                        }
+                    }
+                }
+                
+                // 更新比分选择器的限制
+                updateScoreLimits(matchElement);
+            }
+        }
+        
+        // 更新比分选择器的限制
+        function updateScoreLimits(matchElement) {
+            const teamsInMatch = matchElement.querySelectorAll('.team');
+            const select1 = teamsInMatch[0].querySelector('.score-select');
+            const select2 = teamsInMatch[1].querySelector('.score-select');
+            
+            const score1 = parseInt(select1.value);
+            const score2 = parseInt(select2.value);
+            
+            // 获取比赛的最大分数
+            let maxScore = 2; // 默认FT2
+            if (matchElement.id === 'match20') {
+                maxScore = 4; // 总决赛FT4
+            } else if (['match1', 'match2', 'match3', 'match4', 'match5', 'match6', 'match7', 'match8'].includes(matchElement.id)) {
+                maxScore = 2; // FT2比赛
+            } else {
+                maxScore = 3; // FT3比赛
+            }
+            
+            // 重置所有选项
+            resetSelectOptions(select1, maxScore);
+            resetSelectOptions(select2, maxScore);
+            
+            // 如果一方已经选择了分数，限制另一方的选择
+            if (!isNaN(score1) && score1 !== '-') {
+                limitOpponentScore(select2, score1, maxScore);
+            }
+            
+            if (!isNaN(score2) && score2 !== '-') {
+                limitOpponentScore(select1, score2, maxScore);
+            }
+        }
+        
+        // 重置选择器选项
+        function resetSelectOptions(select, maxScore) {
+            // 保存当前值
+            const currentValue = select.value;
+            
+            // 清空选项
+            select.innerHTML = '<option value="-">-</option>';
+            
+            // 添加所有可能的分数选项
+            for (let i = 0; i <= maxScore; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = i;
+                select.appendChild(option);
+            }
+            
+            // 恢复之前的值（如果仍然有效）
+            if (currentValue !== '-' && parseInt(currentValue) <= maxScore) {
+                select.value = currentValue;
+            }
+        }
+        
+        // 限制对手的分数选择
+        function limitOpponentScore(select, opponentScore, maxScore) {
+            // 如果对手已经获得最高分，则只能选择低于该分数的值
+            if (opponentScore === maxScore) {
+                for (let i = 0; i < select.options.length; i++) {
+                    const option = select.options[i];
+                    if (option.value !== '-' && parseInt(option.value) >= opponentScore) {
+                        option.disabled = true;
+                    }
+                }
+            }
+        }
+        
+        // 更新队伍信息
+        function updateTeam(teamId, sourceTeam) {
+            const targetTeam = document.getElementById(teamId);
+            if (!targetTeam) return;
+            
+            const sourceIcon = sourceTeam.querySelector('.team-icon');
+            const sourceName = sourceTeam.querySelector('.team-name').textContent;
+            
+            const targetIcon = targetTeam.querySelector('.team-icon');
+            const targetName = targetTeam.querySelector('.team-name');
+            
+            // 复制图标（图片或文字）
+            targetIcon.innerHTML = sourceIcon.innerHTML;
+            
+            // 如果源队伍有图片但加载失败，确保显示文字
+            const img = targetIcon.querySelector('img');
+            if (img && img.style.display === 'none') {
+                targetIcon.textContent = sourceIcon.textContent;
+                targetIcon.style.display = 'flex';
+            }
+            
+            targetName.textContent = sourceName;
+        }
+        
+        // 更新冠军
+        function updateChampion(team) {
+            const championResult = document.getElementById('championResult');
+            const championIcon = championResult.querySelector('.champion-icon');
+            const championName = championResult.querySelector('.champion-name');
+            
+            const sourceIcon = team.querySelector('.team-icon');
+            
+            // 复制图标（图片或文字）
+            championIcon.innerHTML = sourceIcon.innerHTML;
+            
+            // 如果源队伍有图片但加载失败，确保显示文字
+            const img = championIcon.querySelector('img');
+            if (img && img.style.display === 'none') {
+                championIcon.textContent = sourceIcon.textContent;
+                championIcon.style.display = 'flex';
+            }
+            
+            championName.textContent = team.querySelector('.team-name').textContent;
+        }
+        
+        // 页面加载时初始化
+        window.onload = function() {
+            initializeTeams();
+            
+            // 为所有比分选择器添加事件监听器
+            document.querySelectorAll('.score-select').forEach(select => {
+                select.addEventListener('change', function() {
+                    updateBracket();
+                });
+            });
+        };
+    </script>
+</body>
+</html>
