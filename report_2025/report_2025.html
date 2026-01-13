@@ -252,6 +252,29 @@
     </audio>
 
     <script>
+        const FONT_CONFIG = {
+            // 使用jsDelivr CDN（支持HTTPS，免费，速度快）
+            fontUrl: 'https://cdn.jsdelivr.net/gh/divinerow/divinerow.github.io@main/handwriting.otf'
+        };
+        
+        // 动态加载字体
+        function loadFont() {
+            const fontFace = new FontFace('Handwriting', `url(${FONT_CONFIG.fontUrl})`, {
+                format: 'opentype',
+                display: 'swap'
+            });
+            
+            fontFace.load().then((loadedFont) => {
+                document.fonts.add(loadedFont);
+                console.log('字体加载成功');
+                document.body.style.fontFamily = 'Handwriting, KaiTi, 楷体, serif';
+            }).catch((error) => {
+                console.error('字体加载失败:', error);
+            });
+        }
+        
+        window.addEventListener('DOMContentLoaded', loadFont);
+        
         const CDN_CONFIG = {
             useCDN: true
         };
