@@ -252,6 +252,29 @@
     </audio>
 
     <script>
+        const CDN_CONFIG = {
+            useCDN: true,
+            github: {
+                username: 'divinerOW',  // 替换为你的GitHub用户名
+                repo: 'divinerow.github.io',     // 替换为你的仓库名
+                branch: 'main'              // 或 'master'
+            }
+        };
+        
+        // 获取图片路径
+        function getImagePath(relativePath) {
+            if (CDN_CONFIG.useCDN) {
+                // 使用jsDelivr CDN
+                const cdnUrl = `https://cdn.jsdelivr.net/gh/${CDN_CONFIG.github.username}/${CDN_CONFIG.github.repo}@${CDN_CONFIG.github.branch}`;
+                const encodedPath = relativePath.split('/').map(s => encodeURIComponent(s)).join('/').replace(/%2F/g, '/');
+                return `${cdnUrl}/${encodedPath}`;
+            } else {
+                // 使用GitHub Pages
+                const fullPath = CDN_CONFIG.pagesPrefix + '/' + relativePath;
+                return fullPath.split('/').map(s => encodeURIComponent(s)).join('/').replace(/%2F/g, '/');
+            }
+        }
+        
         let textLines = [];
         let playerData = {};
         let currentPage = 0;
@@ -590,7 +613,7 @@
                 // 如果找到英雄名称，尝试加载对应的背景图
                 if (heroName && heroName.trim() !== '' && heroName.trim() !== 'None') {
                     hasBackground = true;
-                    const heroImageName = 'image/Hero/' + heroName.trim() + '.jpg';
+                    const heroImageName = getImagePath('image/Hero/' + heroName.trim() + '.jpg');
                     // 创建一个Image对象来测试图片是否存在
                     const testImg = new Image();
                     testImg.onload = function() {
@@ -612,7 +635,7 @@
                 // 如果找到队伍名称，尝试加载对应的背景图
                 if (teamName && teamName.trim() !== '' && teamName.trim() !== 'None') {
                     hasBackground = true;
-                    const teamImageName = 'image/Team/' + teamName.trim() + '.jpg';
+                    const teamImageName = getImagePath('image/Team/' + teamName.trim() + '.jpg');
                     // 创建一个Image对象来测试图片是否存在
                     const testImg = new Image();
                     testImg.onload = function() {
@@ -637,7 +660,7 @@
                 // 如果找到地图名称，尝试加载对应的背景图
                 if (mapName && mapName.trim() !== '' && mapName.trim() !== 'None') {
                     hasBackground = true;
-                    const mapImageName = 'image/map/' + mapName.trim() + '.jpg';
+                    const mapImageName = getImagePath('image/map/' + mapName.trim() + '.jpg');
                     // 创建一个Image对象来测试图片是否存在
                     const testImg = new Image();
                     testImg.onload = function() {
