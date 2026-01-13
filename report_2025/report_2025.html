@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CNOWCS年度报告</title>
+    <style>
+        @font-face {
+            font-family: 'Handwriting';
+            src: url('handwriting.otf') format('truetype');
+            /* 用户稍后会提供字体文件，先预留路径 */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Handwriting', 'KaiTi', '楷体', serif;
+            background-color: #000000; /* 黑色背景填充 */
+            background-image: url('image/main.jpg');
+            background-size: cover; /* 铺满屏幕，保持比例，边缘可能溢出 */
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            min-height: 100vh;
+            overflow: hidden;
+            position: relative;
+            /* 适配手机屏幕 */
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .container {
+            width: 100vw;
+            max-width: 800px;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+            margin: 0 auto;
+        }
+
+        .page {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+            text-align: center;
+            color: #333;
+            z-index: 1; /* 确保页面内容在背景层之上 */
+            /* 移除背景蒙版 */
+        }
+
+        .page.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .page.prev {
+            transform: translateX(-100%);
+        }
+
+        .welcome-text {
+            font-size: 1.5em;
+            margin-bottom: 40px;
+            line-height: 1.8;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            padding: 0 10px;
+            min-height: 680px;
+        }
+
+        .input-section {
+            width: calc(100% - 40px);
+            position: absolute;
+            top: 0;
+            left: 20px;
+            height: 100%;
+        }
+
+        .input-label {
+            font-size: 1.1em;
+            display: block;
+            text-align: left;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            position: absolute;
+            bottom: 35%;
+            width: 100%;
+        }
+
+        .input-box {
+            width: 100%;
+            padding: 12px 15px;
+            font-size: 1.1em;
+            font-family: 'Handwriting', 'KaiTi', '楷体', serif;
+            border: none;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.5);
+            outline: none;
+            position: absolute;
+            bottom: 25%;
+            box-sizing: border-box;
+            text-align: left;
+            left: 0;
+        }
+
+        .start-button {
+            padding: 12px 40px;
+            font-size: 1.2em;
+            font-family: 'Handwriting', 'KaiTi', '楷体', serif;
+            background: transparent;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+            position: absolute;
+            bottom: 15%;
+            color: #FFD700;
+        }
+
+        .start-button:hover {
+            background: transparent;
+            transform: scale(1.05);
+        }
+
+        .content-text {
+            font-size: 1.1em;
+            line-height: 2.2;
+            padding: 30px 10px;
+            max-width: 98%;
+            min-height: 680px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            width: 100%;
+        }
+
+        /* 欢迎页的文案从顶部30%开始 */
+        .content-text.welcome-content {
+            justify-content: flex-start;
+            position: absolute;
+            top: 27%;
+        }
+
+        .segment {
+            display: block;
+            margin: 0.3em 0;
+            opacity: 0;
+            transform: translateY(30px) translateX(0);
+            width: 100%;
+            word-wrap: break-word;
+            word-break: break-all;
+            white-space: normal;
+            text-align: left;
+        }
+
+        /* 最后两页的文字居中对齐 */
+        .segment.segment-center {
+            text-align: center;
+        }
+
+        /* CSV替换的字符串样式 */
+        .replaced-text {
+            color: #FF9800;
+            font-weight: bold;
+            text-shadow: none; /* 去掉阴影效果 */
+            white-space: nowrap; /* 不换行 */
+        }
+
+        /* 回到首页按钮 */
+        .back-home-button {
+            padding: 12px 40px;
+            font-size: 1.2em;
+            font-family: 'Handwriting', 'KaiTi', '楷体', serif;
+            background: transparent;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+            color: #FFD700;
+            position: absolute;
+            bottom: 15%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .back-home-button.hidden {
+            display: none;
+        }
+
+        .back-home-button:hover {
+            background: transparent;
+            transform: scale(1.05);
+        }
+
+        .segment.visible {
+            animation: slideInFromBottom 1.5s ease forwards;
+        }
+
+        @keyframes slideInFromBottom {
+            from {
+                opacity: 0;
+                transform: translateY(30px) translateX(0);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) translateX(0);
+            }
+        }
+
+        /* 背景层淡入动画 */
+        .page-bg-layer {
+            transition: opacity 1s ease-in;
+        }
+
+        .page-bg-layer.fade-in {
+            opacity: 1 !important;
+        }
+
+        /* 触摸提示 */
+        .swipe-hint {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1em;
+            opacity: 0.6;
+            pointer-events: none;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        /* 移除电脑适配，统一使用手机尺寸 */
+    </style>
+</head>
+<body>
+    <div class="container" id="container"></div>
+    <div class="swipe-hint" id="swipeHint">上滑或点击翻页</div>
+    <audio id="bgm" loop autoplay>
+        <source src="bgm.mp3" type="audio/mpeg">
+        <source src="bgm.ogg" type="audio/ogg">
+    </audio>
+
+    <script>
+        let textLines = [];
+        let playerData = {};
+        let currentPage = 0;
+        let pages = [];
+        let touchStartY = 0;
+        let touchEndY = 0;
+        let globalFieldIndex = 0; // 全局字段索引，用于累积替换
+        let csvFieldOrder = []; // CSV字段顺序（不包括player_name）
+
+        // 读取text.txt
+        async function loadText() {
+            const response = await fetch('text.txt');
+            const text = await response.text();
+            textLines = text.trim().split('\n').filter(line => line.trim());
+        }
+
+        // 读取player.csv
+        async function loadPlayerData() {
+            const response = await fetch('player.csv');
+            const text = await response.text();
+            const lines = text.trim().split('\n');
+            
+            if (lines.length < 2) return;
+
+            // 解析CSV头部（按制表符分隔）
+            const headers = lines[0].split('\t');
+            // 保存字段顺序（排除player_name）
+            csvFieldOrder = headers.slice(1).map(h => h.trim());
+            
+            // 解析数据行
+            for (let i = 1; i < lines.length; i++) {
+                if (!lines[i].trim()) continue;
+                const values = lines[i].split('\t');
+                if (values.length > 0) {
+                    const playerName = values[0].trim().toUpperCase(); // 转换为大写
+                    // 排除player_name字段，只存储其他字段
+                    const fields = values.slice(1);
+                    playerData[playerName] = {};
+                    headers.slice(1).forEach((header, index) => {
+                        playerData[playerName][header.trim()] = (fields[index] || '').trim();
+                    });
+                }
+            }
+        }
+
+        // 创建欢迎页
+        function createWelcomePage() {
+            const page = document.createElement('div');
+            page.className = 'page active';
+            
+            // 第一页也按空格分段显示
+            const welcomeLine = textLines[0];
+            const segments = welcomeLine.split(' ');
+            const welcomeHtml = segments.map(segment => 
+                `<div class="segment">${segment.trim()}</div>`
+            ).join('');
+            
+            page.innerHTML = `
+                <div class="content-text welcome-content">
+                    ${welcomeHtml}
+                </div>
+                <div class="input-section">
+                    <input type="text" class="input-box" id="playerInput" placeholder="请输入选手ID" onkeypress="handleEnterKey(event)">
+                    <button class="start-button" onclick="startJourney()">启程</button>
+                </div>
+            `;
+            
+            // 为第一页的文字添加动画
+            setTimeout(() => {
+                const segments = page.querySelectorAll('.segment');
+                segments.forEach((segment, index) => {
+                    setTimeout(() => {
+                        segment.classList.add('visible');
+                    }, index * 1500);
+                });
+            }, 300);
+            
+            return page;
+        }
+
+        // 处理文本，替换x并分段
+        function processText(line, playerName) {
+            if (!playerData[playerName]) {
+                return null;
+            }
+
+            // 按CSV实际顺序获取字段值
+            const fieldValues = csvFieldOrder.map(key => playerData[playerName][key] || '');
+            // 使用全局字段索引，不重置
+            
+            // 记录当前页需要使用的字段索引范围
+            const startFieldIndex = globalFieldIndex;
+            
+            // 按空格分段
+            const segments = line.split(' ');
+            const processedSegments = [];
+            
+            // 先检查这一行所有需要的字段是否全部为None
+            let checkIndex = startFieldIndex;
+            let hasAnyValidField = false;
+            let totalXCount = 0; // 统计这一行总共需要多少个字段
+            
+            for (let segIndex = 0; segIndex < segments.length; segIndex++) {
+                const segment = segments[segIndex];
+                if (segment.includes('x')) {
+                    const xCount = (segment.match(/x/g) || []).length;
+                    totalXCount += xCount;
+                    for (let i = 0; i < xCount; i++) {
+                        if (checkIndex < fieldValues.length) {
+                            const value = fieldValues[checkIndex];
+                            checkIndex++;
+                            if (value && value.trim() !== 'None' && value.trim() !== '') {
+                                hasAnyValidField = true;
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // 如果这一行需要替换的字段全部都是None，跳过这一页
+            if (!hasAnyValidField && segments.some(s => s.includes('x'))) {
+                // 即使跳过，也要递增索引，因为None字段也占用了CSV中的位置
+                globalFieldIndex += totalXCount;
+                return null;
+            }
+
+            // HTML转义函数（使用字符串替换方式，更可靠）
+            function escapeHtml(text) {
+                if (!text) return '';
+                return String(text)
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#39;');
+            }
+
+            // 处理每个分段
+            for (let segIndex = 0; segIndex < segments.length; segIndex++) {
+                let segment = segments[segIndex];
+                
+                // 检查分段是否包含 (shy) 标记
+                if (segment.includes('(shy)')) {
+                    // 如果选手ID不是SHY，跳过这个分段
+                    if (playerName !== 'SHY') {
+                        continue; // 跳过这个分段，不处理
+                    } else {
+                        // 如果是SHY，移除标记
+                        segment = segment.replace('(shy)', '');
+                    }
+                }
+                
+                if (segment.includes('x')) {
+                    // 统计segment中x的数量
+                    const xCount = (segment.match(/x/g) || []).length;
+                    let hasValidReplacement = false;
+
+                    // 先收集所有需要替换的值和x的位置
+                    const replacements = [];
+                    const xPositions = [];
+                    let tempIndex = globalFieldIndex;
+                    
+                    // 找到所有x的位置
+                    for (let i = 0; i < segment.length; i++) {
+                        if (segment[i] === 'x') {
+                            xPositions.push(i);
+                        }
+                    }
+                    
+                    // 收集所有需要替换的值
+                    for (let i = 0; i < xCount; i++) {
+                        if (tempIndex < fieldValues.length) {
+                            const value = fieldValues[tempIndex];
+                            tempIndex++;
+                            
+                            if (value && value.trim() !== 'None' && value.trim() !== '') {
+                                // 移除换行符，替换为空格
+                                const cleanedValue = value.replace(/\n/g, ' ').replace(/\r/g, '');
+                                const escapedValue = escapeHtml(cleanedValue);
+                                replacements.push(`<span class="replaced-text">${escapedValue}</span>`);
+                                hasValidReplacement = true;
+                            } else {
+                                replacements.push(null); // None值标记为null
+                            }
+                        } else {
+                            replacements.push(null); // 超出范围标记为null
+                        }
+                    }
+                    
+                    // 更新全局索引
+                    globalFieldIndex = tempIndex;
+                    
+                    // 从后往前构建新字符串，避免位置偏移
+                    let newSegment = '';
+                    let lastPos = segment.length;
+                    
+                    for (let i = xPositions.length - 1; i >= 0; i--) {
+                        const xPos = xPositions[i];
+                        const replacement = replacements[i];
+                        
+                        // 添加x位置之后到下一个x位置之间的文本
+                        newSegment = segment.substring(xPos + 1, lastPos) + newSegment;
+                        
+                        // 替换x
+                        if (replacement) {
+                            newSegment = replacement + newSegment;
+                        }
+                        // 如果replacement是null，不添加任何内容（移除x）
+                        
+                        lastPos = xPos;
+                    }
+                    
+                    // 添加第一个x之前的文本
+                    newSegment = segment.substring(0, lastPos) + newSegment;
+
+                    // 清理可能的多个空格
+                    newSegment = newSegment.trim();
+                    
+                    // 如果分段替换后还有内容，则添加
+                    if (newSegment) {
+                        processedSegments.push(newSegment);
+                    }
+                } else if (segment.trim()) {
+                    // 普通分段直接添加
+                    processedSegments.push(segment.trim());
+                }
+            }
+
+            // 如果处理后没有内容，返回null表示跳过这一页
+            if (processedSegments.length === 0) {
+                // 回退索引
+                globalFieldIndex = startFieldIndex;
+                return null;
+            }
+
+            return processedSegments;
+        }
+
+        // 创建错误页面（找不到选手数据时显示）
+        function createErrorPage() {
+            const page = document.createElement('div');
+            page.className = 'page';
+            
+            const errorText = '很抱歉没有找到你的报告，请明年再来吧~';
+            const segments = errorText.split(' ');
+            const errorHtml = segments.map(segment => 
+                `<div class="segment">${segment.trim()}</div>`
+            ).join('');
+            
+            page.innerHTML = `
+                <div class="content-text">
+                    ${errorHtml}
+                    <button class="back-home-button" onclick="backToHome()">回到首页</button>
+                </div>
+            `;
+            
+            // 为错误页面的文字添加动画
+            setTimeout(() => {
+                const segments = page.querySelectorAll('.segment');
+                segments.forEach((segment, index) => {
+                    setTimeout(() => {
+                        segment.classList.add('visible');
+                    }, index * 1500);
+                });
+            }, 300);
+            
+            return page;
+        }
+
+        // 创建内容页
+        function createContentPage(line, playerName, isLastPage = false) {
+            const processedSegments = processText(line, playerName);
+            
+            // 如果返回null，表示应该跳过这一页（包括遇到None值的情况）
+            if (processedSegments === null) {
+                return null;
+            }
+
+            const page = document.createElement('div');
+            page.className = 'page';
+            
+            // 创建背景层，用于覆盖整个视口
+            const bgLayer = document.createElement('div');
+            bgLayer.className = 'page-bg-layer';
+            bgLayer.style.position = 'fixed';
+            bgLayer.style.top = '0';
+            bgLayer.style.left = '0';
+            bgLayer.style.width = '100vw';
+            bgLayer.style.height = '100vh';
+            bgLayer.style.zIndex = '-1'; // 背景层在body背景之上，但在页面内容之下
+            bgLayer.style.backgroundSize = 'cover';
+            bgLayer.style.backgroundPosition = 'center';
+            bgLayer.style.backgroundRepeat = 'no-repeat';
+            bgLayer.style.backgroundAttachment = 'fixed';
+            bgLayer.style.pointerEvents = 'none'; // 让背景层不阻挡交互
+            bgLayer.style.display = 'none'; // 初始隐藏
+            bgLayer.style.opacity = '0'; // 初始透明度为0
+            // 将背景层保存到page的数据属性中，以便后续访问
+            page._bgLayer = bgLayer;
+            
+            // 检查是否是英雄相关的页面，并尝试设置背景图
+            let heroName = null;
+            let teamName = null;
+            let mapName = null;
+            if (playerData[playerName]) {
+                // 检查原始行内容，判断是否是英雄相关页面
+                if (line.includes('与你相伴最多的英雄')) {
+                    heroName = playerData[playerName]['MOST_HERO'] || playerData[playerName]['most_hero'];
+                } else if (line.includes('第1赛段你使用最多的英雄')) {
+                    heroName = playerData[playerName]['HERO_STAGE1'] || playerData[playerName]['hero_stage1'];
+                } else if (line.includes('第2赛段你使用最多的英雄')) {
+                    heroName = playerData[playerName]['HERO_STAGE2'] || playerData[playerName]['hero_stage2'];
+                } else if (line.includes('第3赛段你使用最多的英雄')) {
+                    heroName = playerData[playerName]['HERO_STAGE3'] || playerData[playerName]['hero_stage3'];
+                }
+                
+                // 检查是否是队伍相关的页面
+                if (line.includes('在x时获得了最多的上场机会')) {
+                    teamName = playerData[playerName]['TEAM_NAME'] || playerData[playerName]['team_name'];
+                } else if (line.includes('你在世界赛上对战最多的队伍是x')) {
+                    teamName = playerData[playerName]['WORLD_TEAM'] || playerData[playerName]['world_team'];
+                } else if (line.includes('最后一场的对手是x')) {
+                    teamName = playerData[playerName]['LAST_TEAM'] || playerData[playerName]['last_team'];
+                }
+                
+                // 检查是否是地图相关的页面
+                if (line.includes('在对上x的x中 赢下了CNOWCS赛场上的第一分') || line.includes('在对上x的x中赢下了CNOWCS赛场上的第一分')) {
+                    mapName = playerData[playerName]['FIRST_WIN_MAP'] || playerData[playerName]['first_win_map'];
+                } else if (line.includes('是你奋战最久的地方')) {
+                    mapName = playerData[playerName]['MOST_MAP'] || playerData[playerName]['most_map'];
+                }
+                
+                // 标记这个页面是否有背景图
+                let hasBackground = false;
+                
+                // 如果找到英雄名称，尝试加载对应的背景图
+                if (heroName && heroName.trim() !== '' && heroName.trim() !== 'None') {
+                    hasBackground = true;
+                    const heroImageName = 'image/Hero/' + heroName.trim() + '.jpg';
+                    // 创建一个Image对象来测试图片是否存在
+                    const testImg = new Image();
+                    testImg.onload = function() {
+                        // 图片存在，在背景层上设置背景图
+                        bgLayer.style.backgroundImage = `url('${heroImageName}')`;
+                        bgLayer.dataset.hasImage = 'true';
+                        // 如果当前页面是活动页面，立即显示背景层
+                        if (page.classList.contains('active')) {
+                            updateBackgroundLayer(pages.indexOf(page));
+                        }
+                    };
+                    testImg.onerror = function() {
+                        // 图片不存在，标记为无图片
+                        bgLayer.dataset.hasImage = 'false';
+                    };
+                    testImg.src = heroImageName;
+                }
+                
+                // 如果找到队伍名称，尝试加载对应的背景图
+                if (teamName && teamName.trim() !== '' && teamName.trim() !== 'None') {
+                    hasBackground = true;
+                    const teamImageName = 'image/Team/' + teamName.trim() + '.jpg';
+                    // 创建一个Image对象来测试图片是否存在
+                    const testImg = new Image();
+                    testImg.onload = function() {
+                        // 图片存在，在背景层上设置背景图
+                        bgLayer.style.backgroundImage = `url('${teamImageName}')`;
+                        bgLayer.dataset.hasImage = 'true';
+                        // 如果当前页面是活动页面，立即显示背景层
+                        if (page.classList.contains('active')) {
+                            const pageIndex = pages.findIndex(p => p === page);
+                            if (pageIndex >= 0) {
+                                updateBackgroundLayer(pageIndex);
+                            }
+                        }
+                    };
+                    testImg.onerror = function() {
+                        // 图片不存在，标记为无图片
+                        bgLayer.dataset.hasImage = 'false';
+                    };
+                    testImg.src = teamImageName;
+                }
+                
+                // 如果找到地图名称，尝试加载对应的背景图
+                if (mapName && mapName.trim() !== '' && mapName.trim() !== 'None') {
+                    hasBackground = true;
+                    const mapImageName = 'image/Map/' + mapName.trim() + '.jpg';
+                    // 创建一个Image对象来测试图片是否存在
+                    const testImg = new Image();
+                    testImg.onload = function() {
+                        // 图片存在，在背景层上设置背景图
+                        bgLayer.style.backgroundImage = `url('${mapImageName}')`;
+                        bgLayer.dataset.hasImage = 'true';
+                        // 如果当前页面是活动页面，立即显示背景层
+                        if (page.classList.contains('active')) {
+                            const pageIndex = pages.findIndex(p => p === page);
+                            if (pageIndex >= 0) {
+                                updateBackgroundLayer(pageIndex);
+                            }
+                        }
+                    };
+                    testImg.onerror = function() {
+                        // 图片不存在，标记为无图片
+                        bgLayer.dataset.hasImage = 'false';
+                    };
+                    testImg.src = mapImageName;
+                }
+                
+                // 如果没有找到任何背景图，标记为无背景
+                if (!hasBackground) {
+                    bgLayer.dataset.hasImage = 'false';
+                }
+            }
+            
+            // 每个分段占一行，使用div而不是span
+            // 注意：segment可能包含HTML（替换的文本有span标签），所以使用innerHTML
+            // 处理特定数字，将它们标记为橙色（3、14、89、17）
+            function highlightNumbers(text) {
+                // 使用正则表达式匹配独立的数字（3、14、89、17），确保它们是独立的词
+                return text.replace(/\b(3|14|89|17)\b/g, '<span class="replaced-text">$1</span>');
+            }
+            
+            let contentHtml = processedSegments.map(segment => {
+                // 先处理数字高亮，然后再包裹在div中
+                const highlightedSegment = highlightNumbers(segment);
+                // 检查是否是最后两页的文字（"祝你得偿所愿"或"也愿你拥有无限可能"）
+                const isLastPageText = segment.includes('祝你得偿所愿') || segment.includes('也愿你拥有无限可能');
+                const centerClass = isLastPageText ? ' segment-center' : '';
+                return `<div class="segment${centerClass}">${highlightedSegment}</div>`;
+            }).join('');
+            
+            // 如果是最后一页，添加"回到首页"按钮（初始隐藏）
+            if (isLastPage) {
+                contentHtml += '<button class="back-home-button hidden" onclick="backToHome()">回到首页</button>';
+            }
+            
+            page.innerHTML = `<div class="content-text">${contentHtml}</div>`;
+            return page;
+        }
+
+        // 逐行动画显示
+        function animateSegments(pageElement, onComplete) {
+            const segments = pageElement.querySelectorAll('.segment');
+            segments.forEach((segment, index) => {
+                setTimeout(() => {
+                    segment.classList.add('visible');
+                    // 如果是最后一个segment，触发完成回调
+                    if (index === segments.length - 1 && onComplete) {
+                        setTimeout(() => {
+                            onComplete();
+                        }, 1500); // 等待最后一个动画完成（1.5秒）
+                    }
+                }, index * 1500); // 每行延迟1500ms（1.5秒）
+            });
+            // 如果没有segments，立即触发完成回调
+            if (segments.length === 0 && onComplete) {
+                onComplete();
+            }
+        }
+
+        // 处理回车键
+        function handleEnterKey(event) {
+            if (event.key === 'Enter') {
+                startJourney();
+            }
+        }
+
+        // 开始旅程
+        async function startJourney() {
+            let playerName = document.getElementById('playerInput').value.trim();
+            
+            if (!playerName) {
+                alert('请输入选手ID');
+                return;
+            }
+
+            // 将输入转换为大写
+            playerName = playerName.toUpperCase();
+
+            if (!playerData[playerName]) {
+                // 隐藏提示
+                document.getElementById('swipeHint').style.display = 'none';
+                
+                // 隐藏欢迎页
+                const welcomePage = document.querySelector('.page.active');
+                if (welcomePage) {
+                    welcomePage.classList.remove('active');
+                    welcomePage.style.display = 'none';
+                }
+                
+                // 创建并显示错误页面
+                const container = document.getElementById('container');
+                const errorPage = createErrorPage();
+                container.appendChild(errorPage);
+                
+                // 显示错误页面
+                currentPage = 1;
+                pages = [welcomePage, errorPage];
+                setTimeout(() => {
+                    errorPage.classList.add('active');
+                }, 100);
+                
+                return;
+            }
+
+            // 重置全局字段索引
+            globalFieldIndex = 0;
+
+            // 隐藏提示
+            document.getElementById('swipeHint').style.display = 'none';
+
+            // 创建所有页面（从第2行开始，因为第1行已在欢迎页显示）
+            pages = [document.querySelector('.page.active')]; // 保留欢迎页但后续会隐藏
+            
+            // 创建所有页面
+            for (let i = 1; i < textLines.length; i++) {
+                const page = createContentPage(textLines[i], playerName, false);
+                if (page !== null) {
+                    pages.push(page);
+                }
+            }
+            
+            // 将最后一个页面标记为最后一页，添加回到首页按钮（初始隐藏）
+            if (pages.length > 1) {
+                const lastPage = pages[pages.length - 1];
+                const contentText = lastPage.querySelector('.content-text');
+                if (contentText && !contentText.querySelector('.back-home-button')) {
+                    const backButton = document.createElement('button');
+                    backButton.className = 'back-home-button hidden';
+                    backButton.textContent = '回到首页';
+                    backButton.onclick = backToHome;
+                    contentText.appendChild(backButton);
+                }
+            }
+
+            // 将页面添加到容器
+            const container = document.getElementById('container');
+            pages.forEach((page, index) => {
+                if (index > 0) { // 跳过欢迎页（已经在DOM中）
+                    container.appendChild(page);
+                    // 如果有背景层，添加到body
+                    if (page._bgLayer) {
+                        document.body.appendChild(page._bgLayer);
+                    }
+                }
+            });
+
+            // 隐藏欢迎页，显示第一页内容
+            currentPage = 0;
+            pages[0].classList.remove('active');
+            pages[0].style.display = 'none';
+            
+            currentPage = 1;
+            if (pages[1]) {
+                pages[1].classList.add('active');
+                // 更新背景层
+                updateBackgroundLayer(currentPage);
+                // 延迟执行动画，确保页面切换动画完成（0.8s）后再开始文字动画
+                setTimeout(() => {
+                    // 检查是否是最后一页
+                    const isLastPage = (currentPage === pages.length - 1);
+                    if (isLastPage) {
+                        // 最后一页：文案动画完成后延迟3秒显示返回按钮
+                        animateSegments(pages[1], () => {
+                            const backButton = pages[1].querySelector('.back-home-button');
+                            if (backButton) {
+                                setTimeout(() => {
+                                    backButton.classList.remove('hidden');
+                                }, 3000); // 延迟3秒
+                            }
+                        });
+                    } else {
+                        animateSegments(pages[1]);
+                    }
+                }, 800); // 等待页面切换动画完成（0.8s）
+            }
+        }
+
+        // 更新背景层显示
+        function updateBackgroundLayer(pageIndex) {
+            // 隐藏所有背景层并移除淡入动画类
+            document.querySelectorAll('.page-bg-layer').forEach(layer => {
+                layer.style.display = 'none';
+                layer.classList.remove('fade-in');
+                layer.style.opacity = '0';
+            });
+            // 显示当前页面的背景层（如果有且图片加载成功）
+            if (pages[pageIndex] && pages[pageIndex]._bgLayer) {
+                const bgLayer = pages[pageIndex]._bgLayer;
+                // 只有当背景层有图片且图片加载成功时才显示
+                // 如果hasImage未设置（图片还在加载中），也不显示
+                if (bgLayer.dataset.hasImage === 'true') {
+                    // 先设置opacity为0，然后显示，再触发动画
+                    bgLayer.style.opacity = '0';
+                    bgLayer.style.display = 'block';
+                    // 使用requestAnimationFrame确保display设置后再触发动画
+                    requestAnimationFrame(() => {
+                        requestAnimationFrame(() => {
+                            bgLayer.classList.add('fade-in');
+                        });
+                    });
+                }
+            }
+        }
+
+        // 上一页
+        function prevPage() {
+            if (currentPage <= 1) return;
+            
+            // 重置当前页面的动画
+            const currentSegments = pages[currentPage].querySelectorAll('.segment');
+            currentSegments.forEach(seg => seg.classList.remove('visible'));
+            
+            // 隐藏当前页的返回按钮（如果有）
+            const currentBackButton = pages[currentPage].querySelector('.back-home-button');
+            if (currentBackButton) {
+                currentBackButton.classList.add('hidden');
+            }
+            
+            pages[currentPage].classList.remove('active');
+            pages[currentPage].classList.add('prev');
+            currentPage--;
+            pages[currentPage].classList.remove('prev');
+            pages[currentPage].classList.add('active');
+            
+            // 更新背景层
+            updateBackgroundLayer(currentPage);
+            
+            // 播放上一页的动画
+            setTimeout(() => {
+                // 检查是否是最后一页
+                const isLastPage = (currentPage === pages.length - 1);
+                if (isLastPage) {
+                    // 最后一页：文案动画完成后延迟3秒显示返回按钮
+                    animateSegments(pages[currentPage], () => {
+                        const backButton = pages[currentPage].querySelector('.back-home-button');
+                        if (backButton) {
+                            setTimeout(() => {
+                                backButton.classList.remove('hidden');
+                            }, 3000); // 延迟3秒
+                        }
+                    });
+                } else {
+                    animateSegments(pages[currentPage]);
+                }
+            }, 800); // 等待页面切换动画完成（0.8s）
+        }
+
+        // 下一页
+        function nextPage() {
+            if (currentPage >= pages.length - 1) return;
+            
+            // 重置当前页面的动画
+            const currentSegments = pages[currentPage].querySelectorAll('.segment');
+            currentSegments.forEach(seg => seg.classList.remove('visible'));
+            
+            // 隐藏当前页的返回按钮（如果有）
+            const currentBackButton = pages[currentPage].querySelector('.back-home-button');
+            if (currentBackButton) {
+                currentBackButton.classList.add('hidden');
+            }
+            
+            pages[currentPage].classList.remove('active');
+            pages[currentPage].classList.add('prev');
+            currentPage++;
+            pages[currentPage].classList.remove('prev');
+            pages[currentPage].classList.add('active');
+            
+            // 更新背景层
+            updateBackgroundLayer(currentPage);
+            
+            // 播放下一页的动画
+            setTimeout(() => {
+                // 检查是否是最后一页
+                const isLastPage = (currentPage === pages.length - 1);
+                if (isLastPage) {
+                    // 最后一页：文案动画完成后延迟3秒显示返回按钮
+                    animateSegments(pages[currentPage], () => {
+                        const backButton = pages[currentPage].querySelector('.back-home-button');
+                        if (backButton) {
+                            setTimeout(() => {
+                                backButton.classList.remove('hidden');
+                            }, 3000); // 延迟3秒
+                        }
+                    });
+                } else {
+                    animateSegments(pages[currentPage]);
+                }
+            }, 800); // 等待页面切换动画完成（0.8s）
+        }
+
+        // 鼠标点击翻页
+        document.addEventListener('click', (e) => {
+            // 如果点击的是输入框或按钮，不翻页
+            if (e.target.classList.contains('input-box') || 
+                e.target.classList.contains('start-button') ||
+                e.target.closest('.input-section')) {
+                return;
+            }
+
+            if (currentPage > 0) { // 只有在开始旅程后才允许翻页
+                const windowWidth = window.innerWidth;
+                const clickX = e.clientX;
+                
+                if (clickX < windowWidth / 2) {
+                    prevPage();
+                } else {
+                    nextPage();
+                }
+            }
+        });
+
+        // 触摸滑动翻页（移动端）
+        document.addEventListener('touchstart', (e) => {
+            touchStartY = e.touches[0].clientY;
+        });
+
+        document.addEventListener('touchend', (e) => {
+            touchEndY = e.changedTouches[0].clientY;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            if (currentPage <= 0) return; // 欢迎页不允许滑动
+
+            const swipeDistance = touchStartY - touchEndY;
+            const minSwipeDistance = 50; // 最小滑动距离
+
+            if (Math.abs(swipeDistance) > minSwipeDistance) {
+                if (swipeDistance > 0) {
+                    // 向上滑动，下一页
+                    nextPage();
+                } else {
+                    // 向下滑动，上一页
+                    prevPage();
+                }
+            }
+        }
+
+        // 键盘翻页
+        document.addEventListener('keydown', (e) => {
+            if (currentPage <= 0) return;
+
+            if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                prevPage();
+            } else if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+                e.preventDefault();
+                nextPage();
+            }
+        });
+
+        // 回到首页
+        function backToHome() {
+            // 隐藏所有内容页
+            pages.forEach((page, index) => {
+                if (index > 0) {
+                    page.classList.remove('active');
+                    page.classList.remove('prev');
+                    page.style.display = 'none';
+                }
+            });
+            
+            // 显示欢迎页
+            currentPage = 0;
+            pages[0].style.display = 'flex';
+            pages[0].classList.add('active');
+            
+            // 重置输入框
+            const input = document.getElementById('playerInput');
+            if (input) {
+                input.value = '';
+                input.focus();
+            }
+            
+            // 重置全局索引
+            globalFieldIndex = 0;
+            
+            // 显示提示
+            document.getElementById('swipeHint').style.display = 'block';
+        }
+
+        // 确保BGM自动播放
+        document.addEventListener('DOMContentLoaded', () => {
+            const bgm = document.getElementById('bgm');
+            bgm.volume = 0.5; // 设置音量为50%
+            
+            // 尝试播放（需要用户交互才能自动播放）
+            const playPromise = bgm.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(() => {
+                    // 如果自动播放失败，在用户第一次点击时播放
+                    document.addEventListener('click', () => {
+                        bgm.play();
+                    }, { once: true });
+                });
+            }
+        });
+
+        // 初始化
+        async function init() {
+            await loadText();
+            await loadPlayerData();
+            
+            const container = document.getElementById('container');
+            const welcomePage = createWelcomePage();
+            container.appendChild(welcomePage);
+            pages.push(welcomePage);
+        }
+
+        init();
+    </script>
+</body>
+</html>
