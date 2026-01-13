@@ -19,7 +19,7 @@
         body {
             font-family: 'Handwriting', 'KaiTi', '楷体', serif;
             background-color: #000000; /* 黑色背景填充 */
-            background-image: url('image/main.jpg');
+            background-image: url('https://cdn.jsdelivr.net/gh/divinerow/pics@main/main.jpg');
             background-size: cover; /* 铺满屏幕，保持比例，边缘可能溢出 */
             background-position: center;
             background-repeat: no-repeat;
@@ -630,7 +630,7 @@
                 // 如果找到英雄名称，尝试加载对应的背景图
                 if (heroName && heroName.trim() !== '' && heroName.trim() !== 'None') {
                     hasBackground = true;
-                    const heroImageName = getImagePath('image/Hero/' + heroName.trim() + '.jpg');
+                    const heroImageName = getImagePath('hero/' + heroName.trim() + '.jpg');
                     // 创建一个Image对象来测试图片是否存在
                     const testImg = new Image();
                     testImg.onload = function() {
@@ -652,7 +652,7 @@
                 // 如果找到队伍名称，尝试加载对应的背景图
                 if (teamName && teamName.trim() !== '' && teamName.trim() !== 'None') {
                     hasBackground = true;
-                    const teamImageName = getImagePath('image/Team/' + teamName.trim() + '.jpg');
+                    const teamImageName = getImagePath('team/' + teamName.trim() + '.jpg');
                     // 创建一个Image对象来测试图片是否存在
                     const testImg = new Image();
                     testImg.onload = function() {
@@ -677,7 +677,7 @@
                 // 如果找到地图名称，尝试加载对应的背景图
                 if (mapName && mapName.trim() !== '' && mapName.trim() !== 'None') {
                     hasBackground = true;
-                    const mapImageName = getImagePath('image/map/' + mapName.trim() + '.jpg');
+                    const mapImageName = getImagePath('map/' + mapName.trim() + '.jpg');
                     // 创建一个Image对象来测试图片是否存在
                     const testImg = new Image();
                     testImg.onload = function() {
