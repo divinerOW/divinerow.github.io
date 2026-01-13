@@ -638,7 +638,7 @@
                 // 如果找到地图名称，尝试加载对应的背景图
                 if (mapName && mapName.trim() !== '' && mapName.trim() !== 'None') {
                     hasBackground = true;
-                    const mapImageName = 'image/Map/' + mapName.trim() + '.jpg';
+                    const mapImageName = 'image/map/' + mapName.trim() + '.jpg';
                     // 创建一个Image对象来测试图片是否存在
                     const testImg = new Image();
                     testImg.onload = function() {
