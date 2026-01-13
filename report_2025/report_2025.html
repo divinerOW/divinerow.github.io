@@ -7,7 +7,7 @@
     <style>
         @font-face {
             font-family: 'Handwriting';
-            src: url('https://cdn.jsdelivr.net/gh/divinerow/divinerow.github.io@master/report_2025/handwriting.otf') format('truetype');
+            src: url('handwriting.otf') format('truetype');
         }
 
         * {
@@ -17,9 +17,9 @@
         }
 
         body {
-            font-family: 'Handwriting', 'KaiTi', '楷体', serif;
+            font-family: 'Handwriting', '黑体' , serif;
             background-color: #000000; /* 黑色背景填充 */
-            background-image: url('https://cdn.jsdelivr.net/gh/divinerow/pics@main/main.jpg');
+            background-image: url('image/main.jpg');
             background-size: cover; /* 铺满屏幕，保持比例，边缘可能溢出 */
             background-position: center;
             background-repeat: no-repeat;
@@ -73,16 +73,15 @@
             font-size: 1.5em;
             margin-bottom: 40px;
             line-height: 1.8;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
             padding: 0 10px;
             min-height: 680px;
         }
 
         .input-section {
-            width: calc(100% - 40px);
+            width: calc(100% - 20px);
             position: absolute;
             top: 0;
-            left: 20px;
+            left: 10px;
             height: 100%;
         }
 
@@ -90,7 +89,6 @@
             font-size: 1.1em;
             display: block;
             text-align: left;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
             position: absolute;
             bottom: 35%;
             width: 100%;
@@ -98,33 +96,35 @@
 
         .input-box {
             width: 100%;
-            padding: 12px 15px;
+            padding: 12px 0; /* 去掉左右padding，与文案对齐 */
             font-size: 1.1em;
-            font-family: 'Handwriting', 'KaiTi', '楷体', serif;
+            font-family: 'Handwriting', '黑体' , serif;
             border: none;
             border-radius: 10px;
-            background: rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0); /* 0%透明，完全透明 */
             outline: none;
             position: absolute;
-            bottom: 25%;
+            bottom: 42%;
             box-sizing: border-box;
             text-align: left;
             left: 0;
         }
 
         .start-button {
-            padding: 12px 40px;
-            font-size: 1.2em;
-            font-family: 'Handwriting', 'KaiTi', '楷体', serif;
+            padding: 12px 0; /* 去掉左右padding，让文字完全靠左 */
+            font-size: 1.4em;
+            font-family: 'Handwriting', '黑体' , serif;
             background: transparent;
             border: none;
             border-radius: 10px;
             cursor: pointer;
             transition: all 0.3s;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
             position: absolute;
-            bottom: 15%;
+            bottom: 32%;
+            left: 0; /* 左对齐 */
             color: #FFD700;
+            font-weight: bold; /* 加粗显示 */
+            text-align: left; /* 文字左对齐 */
         }
 
         .start-button:hover {
@@ -138,7 +138,6 @@
             padding: 30px 10px;
             max-width: 98%;
             min-height: 680px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -181,7 +180,7 @@
         .back-home-button {
             padding: 12px 40px;
             font-size: 1.2em;
-            font-family: 'Handwriting', 'KaiTi', '楷体', serif;
+            font-family: 'Handwriting', '黑体' , serif;
             background: transparent;
             border: none;
             border-radius: 10px;
@@ -201,7 +200,7 @@
 
         .back-home-button:hover {
             background: transparent;
-            transform: scale(1.05);
+            transform: translateX(-50%) scale(1.05); /* 保持居中同时放大 */
         }
 
         .segment.visible {
@@ -237,7 +236,7 @@
             font-size: 1em;
             opacity: 0.6;
             pointer-events: none;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            color: white; /* 白色字体 */
         }
 
         /* 移除电脑适配，统一使用手机尺寸 */
@@ -257,7 +256,7 @@
             }
             
             .start-button {
-                font-size: 1.5em; /* 从1.2em增大到1.5em */
+                font-size: 1.8em; /* 从1.2em增大到1.5em */
             }
             
             .content-text {
@@ -283,9 +282,14 @@
     </audio>
 
     <script>
+        // 本地调试配置：设置为 true 使用本地资源，false 使用 CDN
+        const USE_LOCAL = true;
+        
         const FONT_CONFIG = {
-            // 使用jsDelivr CDN（支持HTTPS，免费，速度快）
-            fontUrl: 'https://cdn.jsdelivr.net/gh/divinerow/divinerow.github.io@master/report_2025/handwriting.otf'
+            // 根据 USE_LOCAL 配置选择字体路径
+            fontUrl: USE_LOCAL 
+                ? 'handwriting.otf' 
+                : 'https://cdn.jsdelivr.net/gh/divinerow/divinerow.github.io@master/report_2025/handwriting.otf'
         };
         
         // 动态加载字体
@@ -298,7 +302,7 @@
             fontFace.load().then((loadedFont) => {
                 document.fonts.add(loadedFont);
                 console.log('字体加载成功');
-                document.body.style.fontFamily = 'Handwriting, KaiTi, 楷体, serif';
+                document.body.style.fontFamily = 'Handwriting, 黑体, serif';
             }).catch((error) => {
                 console.error('字体加载失败:', error);
             });
@@ -306,20 +310,16 @@
         
         window.addEventListener('DOMContentLoaded', loadFont);
         
-        const CDN_CONFIG = {
-            useCDN: true
-        };
-        
         // 获取图片路径
         function getImagePath(relativePath) {
-            if (CDN_CONFIG.useCDN) {
+            if (USE_LOCAL) {
+                // 使用本地资源：image/hero/xxx.jpg -> image/hero/xxx.jpg
+                return `image/${relativePath}`;
+            } else {
+                // 使用 CDN
                 const cdnUrl = 'https://cdn.jsdelivr.net/gh/divinerow/pics@main';
                 const encodedPath = relativePath.split('/').map(s => encodeURIComponent(s)).join('/').replace(/%2F/g, '/');
                 return `${cdnUrl}/${encodedPath}`;
-            } else {
-                // 使用GitHub Pages
-                const fullPath = CDN_CONFIG.pagesPrefix + '/' + relativePath;
-                return fullPath.split('/').map(s => encodeURIComponent(s)).join('/').replace(/%2F/g, '/');
             }
         }
         
@@ -802,9 +802,6 @@
             playerName = playerName.toUpperCase();
 
             if (!playerData[playerName]) {
-                // 隐藏提示
-                document.getElementById('swipeHint').style.display = 'none';
-                
                 // 隐藏欢迎页
                 const welcomePage = document.querySelector('.page.active');
                 if (welcomePage) {
@@ -822,6 +819,8 @@
                 pages = [welcomePage, errorPage];
                 setTimeout(() => {
                     errorPage.classList.add('active');
+                    // 更新翻页提示显示（错误页面是最后一页，所以会隐藏）
+                    updateSwipeHint();
                 }, 100);
                 
                 return;
@@ -879,6 +878,8 @@
                 pages[1].classList.add('active');
                 // 更新背景层
                 updateBackgroundLayer(currentPage);
+                // 先隐藏翻页提示，等动画完成后再显示
+                updateSwipeHint(false);
                 // 延迟执行动画，确保页面切换动画完成（0.8s）后再开始文字动画
                 setTimeout(() => {
                     // 检查是否是最后一页
@@ -894,9 +895,25 @@
                             }
                         });
                     } else {
-                        animateSegments(pages[1]);
+                        // 非最后一页：文案动画完成后显示翻页提示
+                        animateSegments(pages[1], () => {
+                            updateSwipeHint(true);
+                        });
                     }
                 }, 800); // 等待页面切换动画完成（0.8s）
+            }
+        }
+
+        // 更新翻页提示显示
+        function updateSwipeHint(show = true) {
+            const swipeHint = document.getElementById('swipeHint');
+            if (!swipeHint) return;
+            
+            // 第一页（欢迎页，currentPage === 0）或最后一页不显示
+            if (currentPage === 0 || currentPage === pages.length - 1) {
+                swipeHint.style.display = 'none';
+            } else {
+                swipeHint.style.display = show ? 'block' : 'none';
             }
         }
 
@@ -950,6 +967,9 @@
             // 更新背景层
             updateBackgroundLayer(currentPage);
             
+            // 先隐藏翻页提示，等动画完成后再显示
+            updateSwipeHint(false);
+            
             // 播放上一页的动画
             setTimeout(() => {
                 // 检查是否是最后一页
@@ -965,7 +985,10 @@
                         }
                     });
                 } else {
-                    animateSegments(pages[currentPage]);
+                    // 非最后一页：文案动画完成后显示翻页提示
+                    animateSegments(pages[currentPage], () => {
+                        updateSwipeHint(true);
+                    });
                 }
             }, 800); // 等待页面切换动画完成（0.8s）
         }
@@ -993,6 +1016,9 @@
             // 更新背景层
             updateBackgroundLayer(currentPage);
             
+            // 先隐藏翻页提示，等动画完成后再显示
+            updateSwipeHint(false);
+            
             // 播放下一页的动画
             setTimeout(() => {
                 // 检查是否是最后一页
@@ -1008,7 +1034,10 @@
                         }
                     });
                 } else {
-                    animateSegments(pages[currentPage]);
+                    // 非最后一页：文案动画完成后显示翻页提示
+                    animateSegments(pages[currentPage], () => {
+                        updateSwipeHint(true);
+                    });
                 }
             }, 800); // 等待页面切换动画完成（0.8s）
         }
@@ -1099,8 +1128,8 @@
             // 重置全局索引
             globalFieldIndex = 0;
             
-            // 显示提示
-            document.getElementById('swipeHint').style.display = 'block';
+            // 显示提示（回到首页时，currentPage为0，所以会隐藏）
+            updateSwipeHint();
         }
 
         // 确保BGM自动播放
