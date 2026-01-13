@@ -289,7 +289,7 @@
             // 根据 USE_LOCAL 配置选择字体路径
             fontUrl: USE_LOCAL 
                 ? 'handwriting.otf' 
-                : 'https://cdn.jsdelivr.net/gh/divinerow/divinerow.github.io@master/report_2025/handwriting.otf'
+                : 'https://fastly.jsdelivr.net/gh/divinerow/divinerow.github.io@master/report_2025/handwriting.otf'
         };
         
         // 动态加载字体
@@ -317,7 +317,7 @@
                 return `image/${relativePath}`;
             } else {
                 // 使用 CDN
-                const cdnUrl = 'https://cdn.jsdelivr.net/gh/divinerow/pics@main';
+                const cdnUrl = 'https://fastly.jsdelivr.net/gh/divinerow/pics@main';
                 const encodedPath = relativePath.split('/').map(s => encodeURIComponent(s)).join('/').replace(/%2F/g, '/');
                 return `${cdnUrl}/${encodedPath}`;
             }
