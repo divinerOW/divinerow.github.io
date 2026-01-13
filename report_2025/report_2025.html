@@ -282,7 +282,7 @@
         // 获取图片路径
         function getImagePath(relativePath) {
             if (CDN_CONFIG.useCDN) {
-                const cdnUrl = 'http://t8smftru7.hd-bkt.clouddn.com/';
+                const cdnUrl = 'https://cdn.jsdelivr.net/gh/divinerow/pics@main';
                 const encodedPath = relativePath.split('/').map(s => encodeURIComponent(s)).join('/').replace(/%2F/g, '/');
                 return `${cdnUrl}/${encodedPath}`;
             } else {
