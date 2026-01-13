@@ -7,7 +7,7 @@
     <style>
         @font-face {
             font-family: 'Handwriting';
-            src: url('t8smftru7.hd-bkt.clouddn.com/handwriting.otf') format('truetype');
+            src: url('http://t8smftru7.hd-bkt.clouddn.com/handwriting.otf') format('truetype');
         }
 
         * {
@@ -253,19 +253,13 @@
 
     <script>
         const CDN_CONFIG = {
-            useCDN: true,
-            github: {
-                username: 'divinerOW',  // 替换为你的GitHub用户名
-                repo: 'divinerow.github.io',     // 替换为你的仓库名
-                branch: 'main'              // 或 'master'
-            }
+            useCDN: true
         };
         
         // 获取图片路径
         function getImagePath(relativePath) {
             if (CDN_CONFIG.useCDN) {
-                // 使用jsDelivr CDN
-                const cdnUrl = `https://cdn.jsdelivr.net/gh/${CDN_CONFIG.github.username}/${CDN_CONFIG.github.repo}@${CDN_CONFIG.github.branch}`;
+                const cdnUrl = 'http://t8smftru7.hd-bkt.clouddn.com/';
                 const encodedPath = relativePath.split('/').map(s => encodeURIComponent(s)).join('/').replace(/%2F/g, '/');
                 return `${cdnUrl}/${encodedPath}`;
             } else {
