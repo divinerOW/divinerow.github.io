@@ -253,26 +253,6 @@
     </audio>
 
     <script>
-        const CONFIG = {
-        // 资源基础路径
-        // 本地开发: ''
-        // GitHub Pages: ''
-        // GitHub Release: 'https://github.com/用户名/仓库名/releases/download/v1.0.0'
-        RESOURCE_BASE_URL: 'https://github.com/divinerOW/divinerow.github.io/releases/download/v0.1.0',
-        
-        // 图片资源路径（如果图片在Release中，需要解压后访问）
-        // 如果图片直接放在Release中: 'https://github.com/用户名/仓库名/releases/download/v1.0.0'
-        // 如果使用GitHub Pages: 'https://用户名.github.io/仓库名'
-        IMAGE_BASE_URL: 'https://github.com/divinerOW/divinerow.github.io'
-        };
-        
-        function getImagePath(relativePath) {
-            if (CONFIG.IMAGE_BASE_URL) {
-                return CONFIG.IMAGE_BASE_URL + '/' + relativePath;
-            }
-            return relativePath;
-        }
-        
         let textLines = [];
         let playerData = {};
         let currentPage = 0;
@@ -611,7 +591,7 @@
                 // 如果找到英雄名称，尝试加载对应的背景图
                 if (heroName && heroName.trim() !== '' && heroName.trim() !== 'None') {
                     hasBackground = true;
-                    const heroImageName = getImagePath('image/Hero/' + heroName.trim() + '.jpg');
+                    const heroImageName = 'image/Hero/' + heroName.trim() + '.jpg';
                     // 创建一个Image对象来测试图片是否存在
                     const testImg = new Image();
                     testImg.onload = function() {
