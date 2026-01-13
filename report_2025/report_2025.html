@@ -19,7 +19,7 @@
         body {
             font-family: 'Handwriting', '黑体' , serif;
             background-color: #000000; /* 黑色背景填充 */
-            background-image: url('https://cdn.jsdelivr.net/gh/divinerow/pics@main/main.jpg');
+            background-image: url('https://gcore.jsdelivr.net/gh/divinerow/pics@main/main.jpg');
             background-size: cover; /* 铺满屏幕，保持比例，边缘可能溢出 */
             background-position: center;
             background-repeat: no-repeat;
@@ -289,7 +289,7 @@
             // 根据 USE_LOCAL 配置选择字体路径
             fontUrl: USE_LOCAL 
                 ? 'handwriting.otf' 
-                : 'https://cdn.jsdelivr.net/gh/divinerow/divinerow.github.io@master/report_2025/handwriting.otf'
+                : 'https://gcore.jsdelivr.net/gh/divinerow/divinerow.github.io@master/report_2025/handwriting.otf'
         };
         
         // 动态加载字体
@@ -317,7 +317,7 @@
                 return `image/${relativePath}`;
             } else {
                 // 使用 CDN
-                const cdnUrl = 'https://cdn.jsdelivr.net/gh/divinerow/pics@main';
+                const cdnUrl = 'https://gcore.jsdelivr.net/gh/divinerow/pics@main';
                 const encodedPath = relativePath.split('/').map(s => encodeURIComponent(s)).join('/').replace(/%2F/g, '/');
                 return `${cdnUrl}/${encodedPath}`;
             }
